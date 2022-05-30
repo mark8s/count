@@ -7,7 +7,7 @@ import (
 )
 
 var SchemeGroupVersion = schema.GroupVersion{
-	Group:   "mark8s.io",
+	Group:   "demo.mark8s.io",
 	Version: "v1",
 }
 

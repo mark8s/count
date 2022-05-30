@@ -37,22 +37,35 @@ k8s controller demo
 go build .
 ./count -alsologtostderr=true
 ```
+启动后，先后创建 crd和cr资源，然后再删除cr资源
 
-日志
+日志情况：
 ```shell
-$ ./count -alsologtostderr=true
-I0530 06:53:24.579677    4423 controller.go:63] Setting up event handlers
-I0530 06:53:24.580040    4423 controller.go:87] 开始controller业务，开始一次缓存数据同步
-I0530 06:53:24.681157    4423 controller.go:92] worker启动
-I0530 06:53:24.681197    4423 controller.go:97] worker已经启动
-enqueueCount: obj &{{ } {test-count  default  8652b819-b187-4073-b798-c089956fe7a7 11969208 1 2022-05-30 06:53:32 +0000 UTC <nil> <nil> map[] map[kubectl.kubernetes.io/last-applied-configuration:{"apiVersion":"mark8s.io/v1","kind":"Count","metadata":{"annotations":{},"name":"test-count","namespace":"default"},"spec":{"count":3,"name":"nginx"}}
-] [] []  [{kubectl-client-side-apply Update mark8s.io/v1 2022-05-30 06:53:32 +0000 UTC FieldsV1 {"f:metadata":{"f:annotations":{".":{},"f:kubectl.kubernetes.io/last-applied-configuration":{}}},"f:spec":{".":{},"f:count":{},"f:name":{}}} }]} { 0}}
-I0530 06:53:32.127968    4423 controller.go:167] 这里是Count对象的期望状态: &v1.Count{TypeMeta:v1.TypeMeta{Kind:"", APIVersion:""}, ObjectMeta:v1.ObjectMeta{Name:"test-count", GenerateName:"", Namespace:"default", SelfLink:"", UID:"8652b819-b187-4073-b798-c089956fe7a7", ResourceVersion:"11969208", Generation:1, CreationTimestamp:time.Date(2022, time.May, 30, 6, 53, 32, 0, time.Local), DeletionTimestamp:<nil>, DeletionGracePeriodSeconds:(*int64)(nil), Labels:map[string]string(nil), Annotations:map[string]string{"kubectl.kubernetes.io/last-applied-configuration":"{\"apiVersion\":\"mark8s.io/v1\",\"kind\":\"Count\",\"metadata\":{\"annotations\":{},\"name\":\"test-count\",\"namespace\":\"default\"},\"spec\":{\"count\":3,\"name\":\"nginx\"}}\n"}, OwnerReferences:[]v1.OwnerReference(nil), Finalizers:[]string(nil), ZZZ_DeprecatedClusterName:"", ManagedFields:[]v1.ManagedFieldsEntry{v1.ManagedFieldsEntry{Manager:"kubectl-client-side-apply", Operation:"Update", APIVersion:"mark8s.io/v1", Time:time.Date(2022, time.May, 30, 6, 53, 32, 0, time.Local), FieldsType:"FieldsV1", FieldsV1:(*v1.FieldsV1)(0xc00000e9a8), Subresource:""}}}, Spec:v1.CountSpec{name:"", count:0}} ...
-I0530 06:53:32.128193    4423 controller.go:168] 实际状态是从业务层面得到的，此处应该去的实际状态，与期望状态做对比，并根据差异做出响应(新增或者删除)
-I0530 06:53:32.128232    4423 controller.go:134] Successfully synced 'default/test-count'
-I0530 06:53:32.129333    4423 event.go:285] Event(v1.ObjectReference{Kind:"Count", Namespace:"default", Name:"test-count", UID:"8652b819-b187-4073-b798-c089956fe7a7", APIVersion:"mark8s.io/v1", ResourceVersion:"11969208", FieldPath:""}): type: 'Normal' reason: 'Synced' Student synced successfully
-I0530 06:53:45.741571    4423 controller.go:159] Count对象被删除，请在这里执行实际的删除业务: default/test-count ...
-I0530 06:53:45.741595    4423 controller.go:134] Successfully synced 'default/test-count'
+[root@biz-master-48 count]# ./count -alsologtostderr=true
+I0530 07:57:55.721030    4866 controller.go:63] Setting up event handlers
+I0530 07:57:55.721432    4866 controller.go:87] 开始controller业务，开始一次缓存数据同步
+W0530 07:57:55.732493    4866 reflector.go:324] pkg/mod/k8s.io/client-go@v0.24.1/tools/cache/reflector.go:167: failed to list *v1.Count: the server could not find the requested resource (get counts.demo.mark8s.io)
+E0530 07:57:55.732615    4866 reflector.go:138] pkg/mod/k8s.io/client-go@v0.24.1/tools/cache/reflector.go:167: Failed to watch *v1.Count: failed to list *v1.Count: the server could not find the requested resource (get counts.demo.mark8s.io)
+W0530 07:57:57.018605    4866 reflector.go:324] pkg/mod/k8s.io/client-go@v0.24.1/tools/cache/reflector.go:167: failed to list *v1.Count: the server could not find the requested resource (get counts.demo.mark8s.io)
+E0530 07:57:57.018646    4866 reflector.go:138] pkg/mod/k8s.io/client-go@v0.24.1/tools/cache/reflector.go:167: Failed to watch *v1.Count: failed to list *v1.Count: the server could not find the requested resource (get counts.demo.mark8s.io)
+W0530 07:58:00.125599    4866 reflector.go:324] pkg/mod/k8s.io/client-go@v0.24.1/tools/cache/reflector.go:167: failed to list *v1.Count: the server could not find the requested resource (get counts.demo.mark8s.io)
+E0530 07:58:00.125639    4866 reflector.go:138] pkg/mod/k8s.io/client-go@v0.24.1/tools/cache/reflector.go:167: Failed to watch *v1.Count: failed to list *v1.Count: the server could not find the requested resource (get counts.demo.mark8s.io)
+W0530 07:58:05.454530    4866 reflector.go:324] pkg/mod/k8s.io/client-go@v0.24.1/tools/cache/reflector.go:167: failed to list *v1.Count: the server could not find the requested resource (get counts.demo.mark8s.io)
+E0530 07:58:05.454561    4866 reflector.go:138] pkg/mod/k8s.io/client-go@v0.24.1/tools/cache/reflector.go:167: Failed to watch *v1.Count: failed to list *v1.Count: the server could not find the requested resource (get counts.demo.mark8s.io)
+W0530 07:58:14.658313    4866 reflector.go:324] pkg/mod/k8s.io/client-go@v0.24.1/tools/cache/reflector.go:167: failed to list *v1.Count: the server could not find the requested resource (get counts.demo.mark8s.io)
+E0530 07:58:14.658411    4866 reflector.go:138] pkg/mod/k8s.io/client-go@v0.24.1/tools/cache/reflector.go:167: Failed to watch *v1.Count: failed to list *v1.Count: the server could not find the requested resource (get counts.demo.mark8s.io)
+I0530 07:58:33.024376    4866 controller.go:92] worker启动
+I0530 07:58:33.024459    4866 controller.go:97] worker已经启动
+enqueueCount: obj &{{ } {test-count  default  f702028e-363c-4959-9bc9-bee146b1d746 11980682 1 2022-05-30 07:58:42 +0000 UTC <nil> <nil> map[] map[kubectl.kubernetes.io/last-applied-configuration:{"apiVersion":"demo.mark8s.io/v1","kind":"Count","metadata":{"annotations":{},"name":"test-count","namespace":"default"},"spec":{"count":3,"name":"nginx"}}
+] [] []  [{kubectl-client-side-apply Update demo.mark8s.io/v1 2022-05-30 07:58:42 +0000 UTC FieldsV1 {"f:metadata":{"f:annotations":{".":{},"f:kubectl.kubernetes.io/last-applied-configuration":{}}},"f:spec":{".":{},"f:count":{},"f:name":{}}} }]} { 0} {false}}
+I0530 07:58:42.136970    4866 controller.go:167] 这里是Count对象的期望状态: &v1.Count{TypeMeta:v1.TypeMeta{Kind:"", APIVersion:""}, ObjectMeta:v1.ObjectMeta{Name:"test-count", GenerateName:"", Namespace:"default", SelfLink:"", UID:"f702028e-363c-4959-9bc9-bee146b1d746", ResourceVersion:"11980682", Generation:1, CreationTimestamp:time.Date(2022, time.May, 30, 7, 58, 42, 0, time.Local), DeletionTimestamp:<nil>, DeletionGracePeriodSeconds:(*int64)(nil), Labels:map[string]string(nil), Annotations:map[string]string{"kubectl.kubernetes.io/last-applied-configuration":"{\"apiVersion\":\"demo.mark8s.io/v1\",\"kind\":\"Count\",\"metadata\":{\"annotations\":{},\"name\":\"test-count\",\"namespace\":\"default\"},\"spec\":{\"count\":3,\"name\":\"nginx\"}}\n"}, OwnerReferences:[]v1.OwnerReference(nil), Finalizers:[]string(nil), ZZZ_DeprecatedClusterName:"", ManagedFields:[]v1.ManagedFieldsEntry{v1.ManagedFieldsEntry{Manager:"kubectl-client-side-apply", Operation:"Update", APIVersion:"demo.mark8s.io/v1", Time:time.Date(2022, time.May, 30, 7, 58, 42, 0, time.Local), FieldsType:"FieldsV1", FieldsV1:(*v1.FieldsV1)(0xc0001b5830), Subresource:""}}}, Spec:v1.CountSpec{name:"", count:0}, Status:v1.CountStatus{healthy:false}} ...
+I0530 07:58:42.137272    4866 controller.go:168] 实际状态是从业务层面得到的，此处应该去的实际状态，与期望状态做对比，并根据差异做出响应(新增或者删除)
+I0530 07:58:42.137366    4866 controller.go:134] Successfully synced 'default/test-count'
+I0530 07:58:42.137926    4866 event.go:285] Event(v1.ObjectReference{Kind:"Count", Namespace:"default", Name:"test-count", UID:"f702028e-363c-4959-9bc9-bee146b1d746", APIVersion:"demo.mark8s.io/v1", ResourceVersion:"11980682", FieldPath:""}): type: 'Normal' reason: 'Synced' Student synced successfully
+I0530 07:58:51.462978    4866 controller.go:159] Count对象被删除，请在这里执行实际的删除业务: default/test-count ...
+I0530 07:58:51.463008    4866 controller.go:134] Successfully synced 'default/test-count'
+^CI0530 07:58:53.802445    4866 controller.go:99] worker已经结束
+[root@biz-master-48 count]#
 ```
 
 ## 问题

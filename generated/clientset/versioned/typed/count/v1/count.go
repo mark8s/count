@@ -40,6 +40,7 @@ type CountsGetter interface {
 type CountInterface interface {
 	Create(ctx context.Context, count *v1.Count, opts metav1.CreateOptions) (*v1.Count, error)
 	Update(ctx context.Context, count *v1.Count, opts metav1.UpdateOptions) (*v1.Count, error)
+	UpdateStatus(ctx context.Context, count *v1.Count, opts metav1.UpdateOptions) (*v1.Count, error)
 	Delete(ctx context.Context, name string, opts metav1.DeleteOptions) error
 	DeleteCollection(ctx context.Context, opts metav1.DeleteOptions, listOpts metav1.ListOptions) error
 	Get(ctx context.Context, name string, opts metav1.GetOptions) (*v1.Count, error)
@@ -56,7 +57,7 @@ type counts struct {
 }
 
 // newCounts returns a Counts
-func newCounts(c *Mark8sV1Client, namespace string) *counts {
+func newCounts(c *DemoV1Client, namespace string) *counts {
 	return &counts{
 		client: c.RESTClient(),
 		ns:     namespace,
@@ -128,6 +129,22 @@ func (c *counts) Update(ctx context.Context, count *v1.Count, opts metav1.Update
 		Namespace(c.ns).
 		Resource("counts").
 		Name(count.Name).
+		VersionedParams(&opts, scheme.ParameterCodec).
+		Body(count).
+		Do(ctx).
+		Into(result)
+	return
+}
+
+// UpdateStatus was generated because the type contains a Status member.
+// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
+func (c *counts) UpdateStatus(ctx context.Context, count *v1.Count, opts metav1.UpdateOptions) (result *v1.Count, err error) {
+	result = &v1.Count{}
+	err = c.client.Put().
+		Namespace(c.ns).
+		Resource("counts").
+		Name(count.Name).
+		SubResource("status").
 		VersionedParams(&opts, scheme.ParameterCodec).
 		Body(count).
 		Do(ctx).

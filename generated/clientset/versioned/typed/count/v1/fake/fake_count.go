@@ -32,13 +32,13 @@ import (
 
 // FakeCounts implements CountInterface
 type FakeCounts struct {
-	Fake *FakeMark8sV1
+	Fake *FakeDemoV1
 	ns   string
 }
 
-var countsResource = schema.GroupVersionResource{Group: "mark8s.io", Version: "v1", Resource: "counts"}
+var countsResource = schema.GroupVersionResource{Group: "demo.mark8s.io", Version: "v1", Resource: "counts"}
 
-var countsKind = schema.GroupVersionKind{Group: "mark8s.io", Version: "v1", Kind: "Count"}
+var countsKind = schema.GroupVersionKind{Group: "demo.mark8s.io", Version: "v1", Kind: "Count"}
 
 // Get takes name of the count, and returns the corresponding count object, and an error if there is any.
 func (c *FakeCounts) Get(ctx context.Context, name string, options v1.GetOptions) (result *countv1.Count, err error) {
@@ -95,6 +95,18 @@ func (c *FakeCounts) Create(ctx context.Context, count *countv1.Count, opts v1.C
 func (c *FakeCounts) Update(ctx context.Context, count *countv1.Count, opts v1.UpdateOptions) (result *countv1.Count, err error) {
 	obj, err := c.Fake.
 		Invokes(testing.NewUpdateAction(countsResource, c.ns, count), &countv1.Count{})
+
+	if obj == nil {
+		return nil, err
+	}
+	return obj.(*countv1.Count), err
+}
+
+// UpdateStatus was generated because the type contains a Status member.
+// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
+func (c *FakeCounts) UpdateStatus(ctx context.Context, count *countv1.Count, opts v1.UpdateOptions) (*countv1.Count, error) {
+	obj, err := c.Fake.
+		Invokes(testing.NewUpdateSubresourceAction(countsResource, "status", c.ns, count), &countv1.Count{})
 
 	if obj == nil {
 		return nil, err

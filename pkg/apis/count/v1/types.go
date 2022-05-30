@@ -8,12 +8,17 @@ import metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 type Count struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
-	Spec              CountSpec `json:"spec"`
+	Spec              CountSpec   `json:"spec"`
+	Status            CountStatus `json:"status"`
 }
 
 type CountSpec struct {
 	name  string `json:"resourceType"`
 	count int    `json:"count"`
+}
+
+type CountStatus struct {
+	healthy bool `json:"healthy"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object

@@ -1,4 +1,4 @@
-package main
+package controller
 
 import (
 	clientset "count/generated/clientset/versioned"

@@ -1,6 +1,7 @@
 package main
 
 import (
+	controller "count/controller"
 	clientset "count/generated/clientset/versioned"
 	"count/generated/informers/externalversions"
 	"count/pkg/signals"
@@ -37,8 +38,8 @@ func main() {
 
 	countInformerFactory := externalversions.NewSharedInformerFactory(countClient, time.Second*30)
 	//得到controller
-	controller := NewController(kubeClient, countClient,
-		countInformerFactory.Mark8s().V1().Counts())
+	controller := controller.NewController(kubeClient, countClient,
+		countInformerFactory.Demo().V1().Counts())
 
 	//启动informer
 	go countInformerFactory.Start(stopCh)
