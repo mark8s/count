@@ -25,17 +25,17 @@ import (
 	testing "k8s.io/client-go/testing"
 )
 
-type FakeCountV1 struct {
+type FakeMark8sV1 struct {
 	*testing.Fake
 }
 
-func (c *FakeCountV1) Counts(namespace string) v1.CountInterface {
+func (c *FakeMark8sV1) Counts(namespace string) v1.CountInterface {
 	return &FakeCounts{c, namespace}
 }
 
 // RESTClient returns a RESTClient that is used to communicate
 // with API server by this client implementation.
-func (c *FakeCountV1) RESTClient() rest.Interface {
+func (c *FakeMark8sV1) RESTClient() rest.Interface {
 	var ret *rest.RESTClient
 	return ret
 }

@@ -56,7 +56,7 @@ type counts struct {
 }
 
 // newCounts returns a Counts
-func newCounts(c *CountV1Client, namespace string) *counts {
+func newCounts(c *Mark8sV1Client, namespace string) *counts {
 	return &counts{
 		client: c.RESTClient(),
 		ns:     namespace,

@@ -1,15 +1,14 @@
 package v1
 
 import (
-	"count/pkg/apis/count"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 )
 
 var SchemeGroupVersion = schema.GroupVersion{
-	Group:   count.GroupName,
-	Version: count.Version,
+	Group:   "mark8s.io",
+	Version: "v1",
 }
 
 var (

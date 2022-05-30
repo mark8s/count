@@ -32,13 +32,13 @@ import (
 
 // FakeCounts implements CountInterface
 type FakeCounts struct {
-	Fake *FakeCountV1
+	Fake *FakeMark8sV1
 	ns   string
 }
 
-var countsResource = schema.GroupVersionResource{Group: "count.mark8s.io", Version: "v1", Resource: "counts"}
+var countsResource = schema.GroupVersionResource{Group: "mark8s.io", Version: "v1", Resource: "counts"}
 
-var countsKind = schema.GroupVersionKind{Group: "count.mark8s.io", Version: "v1", Kind: "Count"}
+var countsKind = schema.GroupVersionKind{Group: "mark8s.io", Version: "v1", Kind: "Count"}
 
 // Get takes name of the count, and returns the corresponding count object, and an error if there is any.
 func (c *FakeCounts) Get(ctx context.Context, name string, options v1.GetOptions) (result *countv1.Count, err error) {

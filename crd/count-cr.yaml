@@ -1,4 +1,4 @@
-apiVersion: counts.mark8s.io/v1
+apiVersion: mark8s.io/v1
 kind: Count
 metadata:
   name: test-count

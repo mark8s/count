@@ -19,7 +19,7 @@ limitations under the License.
 package versioned
 
 import (
-	countv1 "count/generated/clientset/versioned/typed/count/v1"
+	mark8sv1 "count/generated/clientset/versioned/typed/count/v1"
 	"fmt"
 	"net/http"
 
@@ -30,19 +30,19 @@ import (
 
 type Interface interface {
 	Discovery() discovery.DiscoveryInterface
-	CountV1() countv1.CountV1Interface
+	Mark8sV1() mark8sv1.Mark8sV1Interface
 }
 
 // Clientset contains the clients for groups. Each group has exactly one
 // version included in a Clientset.
 type Clientset struct {
 	*discovery.DiscoveryClient
-	countV1 *countv1.CountV1Client
+	mark8sV1 *mark8sv1.Mark8sV1Client
 }
 
-// CountV1 retrieves the CountV1Client
-func (c *Clientset) CountV1() countv1.CountV1Interface {
-	return c.countV1
+// Mark8sV1 retrieves the Mark8sV1Client
+func (c *Clientset) Mark8sV1() mark8sv1.Mark8sV1Interface {
+	return c.mark8sV1
 }
 
 // Discovery retrieves the DiscoveryClient
@@ -89,7 +89,7 @@ func NewForConfigAndClient(c *rest.Config, httpClient *http.Client) (*Clientset,
 
 	var cs Clientset
 	var err error
-	cs.countV1, err = countv1.NewForConfigAndClient(&configShallowCopy, httpClient)
+	cs.mark8sV1, err = mark8sv1.NewForConfigAndClient(&configShallowCopy, httpClient)
 	if err != nil {
 		return nil, err
 	}
@@ -114,7 +114,7 @@ func NewForConfigOrDie(c *rest.Config) *Clientset {
 // New creates a new Clientset for the given RESTClient.
 func New(c rest.Interface) *Clientset {
 	var cs Clientset
-	cs.countV1 = countv1.New(c)
+	cs.mark8sV1 = mark8sv1.New(c)
 
 	cs.DiscoveryClient = discovery.NewDiscoveryClient(c)
 	return &cs

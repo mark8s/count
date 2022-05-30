@@ -20,8 +20,8 @@ package fake
 
 import (
 	clientset "count/generated/clientset/versioned"
-	countv1 "count/generated/clientset/versioned/typed/count/v1"
-	fakecountv1 "count/generated/clientset/versioned/typed/count/v1/fake"
+	mark8sv1 "count/generated/clientset/versioned/typed/count/v1"
+	fakemark8sv1 "count/generated/clientset/versioned/typed/count/v1/fake"
 
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/watch"
@@ -80,7 +80,7 @@ var (
 	_ testing.FakeClient  = &Clientset{}
 )
 
-// CountV1 retrieves the CountV1Client
-func (c *Clientset) CountV1() countv1.CountV1Interface {
-	return &fakecountv1.FakeCountV1{Fake: &c.Fake}
+// Mark8sV1 retrieves the Mark8sV1Client
+func (c *Clientset) Mark8sV1() mark8sv1.Mark8sV1Interface {
+	return &fakemark8sv1.FakeMark8sV1{Fake: &c.Fake}
 }

@@ -32,7 +32,30 @@ k8s controller demo
 
 `count:v1`: ${GROUP_VERSION}，GROUP==count,VERSION==v1
 
-### 问题
+## 编译
+```shell
+go build .
+./count -alsologtostderr=true
+```
+
+日志
+```shell
+[root@biz-master-48 count]# ./count -alsologtostderr=true
+I0530 06:32:56.174960   26832 controller.go:63] Setting up event handlers
+I0530 06:32:56.175281   26832 controller.go:87] 开始controller业务，开始一次缓存数据同步
+enqueueCount: obj &{{Count mark8s.io/v1} {test-count  default  7015b3a9-ad0a-40e3-99e8-72d46e593695 11962042 1 2022-05-30 06:12:49 +0000 UTC <nil> <nil> map[] map[kubectl.kubernetes.io/last-applied-configuration:{"apiVersion":"mark8s.io/v1","kind":"Count","metadata":{"annotations":{},"name":"test-count","namespace":"default"},"spec":{"count":3,"name":"nginx"}}
+] [] []  [{kubectl-client-side-apply Update mark8s.io/v1 2022-05-30 06:12:49 +0000 UTC FieldsV1 {"f:metadata":{"f:annotations":{".":{},"f:kubectl.kubernetes.io/last-applied-configuration":{}}},"f:spec":{".":{},"f:count":{},"f:name":{}}} }]} { 0}}
+I0530 06:32:56.275800   26832 controller.go:92] worker启动
+I0530 06:32:56.275884   26832 controller.go:97] worker已经启动
+I0530 06:32:56.275972   26832 controller.go:167] 这里是student对象的期望状态: &v1.Count{TypeMeta:v1.TypeMeta{Kind:"Count", APIVersion:"mark8s.io/v1"}, ObjectMeta:v1.ObjectMeta{Name:"test-count", GenerateName:"", Namespace:"default", SelfLink:"", UID:"7015b3a9-ad0a-40e3-99e8-72d46e593695", ResourceVersion:"11962042", Generation:1, CreationTimestamp:time.Date(2022, time.May, 30, 6, 12, 49, 0, time.Local), DeletionTimestamp:<nil>, DeletionGracePeriodSeconds:(*int64)(nil), Labels:map[string]string(nil), Annotations:map[string]string{"kubectl.kubernetes.io/last-applied-configuration":"{\"apiVersion\":\"mark8s.io/v1\",\"kind\":\"Count\",\"metadata\":{\"annotations\":{},\"name\":\"test-count\",\"namespace\":\"default\"},\"spec\":{\"count\":3,\"name\":\"nginx\"}}\n"}, OwnerReferences:[]v1.OwnerReference(nil), Finalizers:[]string(nil), ZZZ_DeprecatedClusterName:"", ManagedFields:[]v1.ManagedFieldsEntry{v1.ManagedFieldsEntry{Manager:"kubectl-client-side-apply", Operation:"Update", APIVersion:"mark8s.io/v1", Time:time.Date(2022, time.May, 30, 6, 12, 49, 0, time.Local), FieldsType:"FieldsV1", FieldsV1:(*v1.FieldsV1)(0xc000580c78), Subresource:""}}}, Spec:v1.CountSpec{name:"", count:0}} ...
+I0530 06:32:56.276155   26832 controller.go:168] 实际状态是从业务层面得到的，此处应该去的实际状态，与期望状态做对比，并根据差异做出响应(新增或者删除)
+I0530 06:32:56.276201   26832 controller.go:134] Successfully synced 'default/test-count'
+I0530 06:32:56.278478   26832 event.go:285] Event(v1.ObjectReference{Kind:"Count", Namespace:"default", Name:"test-count", UID:"7015b3a9-ad0a-40e3-99e8-72d46e593695", APIVersion:"mark8s.io/v1", ResourceVersion:"11962042", FieldPath:""}): type: 'Normal' reason: 'Synced' Student synced successfully
+I0530 06:35:37.294236   26832 controller.go:159] Student对象被删除，请在这里执行实际的删除业务: default/test-count ...
+I0530 06:35:37.294267   26832 controller.go:134] Successfully synced 'default/test-count'
+```
+
+## 问题
 1.使用vendor
 ```shell
 import _ "k8s.io/code-generator"
@@ -43,7 +66,11 @@ chmod -R 777 vendor
 ```
 
 ## Reference
+[k8s自定义controller三部曲之一:创建CRD（Custom Resource Definition）](https://blog.csdn.net/boling_cavalry/article/details/88917818)
+
 [k8s自定义controller三部曲之二:自动生成代码](https://blog.csdn.net/boling_cavalry/article/details/88924194?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522165383645816781685390100%2522%252C%2522scm%2522%253A%252220140713.130102334.pc%255Fblog.%2522%257D&request_id=165383645816781685390100&biz_id=0&utm_medium=distribute.pc_search_result.none-task-blog-2~blog~first_rank_ecpm_v1~rank_v31_ecpm-3-88924194-null-null.nonecase&utm_term=controller&spm=1018.2226.3001.4450)
+
+[k8s自定义controller三部曲之三：编写controller代码](https://blog.csdn.net/boling_cavalry/article/details/88934063)
 
 [使用code-generator生成crd的clientset、informer、listers](https://xieys.club/code-generator-crd/)
 

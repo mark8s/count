@@ -62,13 +62,13 @@ func NewFilteredCountInformer(client versioned.Interface, namespace string, resy
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.CountV1().Counts(namespace).List(context.TODO(), options)
+				return client.Mark8sV1().Counts(namespace).List(context.TODO(), options)
 			},
 			WatchFunc: func(options metav1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.CountV1().Counts(namespace).Watch(context.TODO(), options)
+				return client.Mark8sV1().Counts(namespace).Watch(context.TODO(), options)
 			},
 		},
 		&countv1.Count{},

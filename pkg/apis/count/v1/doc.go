@@ -1,4 +1,4 @@
 // +k8s:deepcopy-gen=package
-// +groupName=count.mark8s.io
+// +groupName=mark8s.io
 
 package v1

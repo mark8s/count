@@ -26,24 +26,24 @@ import (
 	rest "k8s.io/client-go/rest"
 )
 
-type CountV1Interface interface {
+type Mark8sV1Interface interface {
 	RESTClient() rest.Interface
 	CountsGetter
 }
 
-// CountV1Client is used to interact with features provided by the count.mark8s.io group.
-type CountV1Client struct {
+// Mark8sV1Client is used to interact with features provided by the mark8s.io group.
+type Mark8sV1Client struct {
 	restClient rest.Interface
 }
 
-func (c *CountV1Client) Counts(namespace string) CountInterface {
+func (c *Mark8sV1Client) Counts(namespace string) CountInterface {
 	return newCounts(c, namespace)
 }
 
-// NewForConfig creates a new CountV1Client for the given config.
+// NewForConfig creates a new Mark8sV1Client for the given config.
 // NewForConfig is equivalent to NewForConfigAndClient(c, httpClient),
 // where httpClient was generated with rest.HTTPClientFor(c).
-func NewForConfig(c *rest.Config) (*CountV1Client, error) {
+func NewForConfig(c *rest.Config) (*Mark8sV1Client, error) {
 	config := *c
 	if err := setConfigDefaults(&config); err != nil {
 		return nil, err
@@ -55,9 +55,9 @@ func NewForConfig(c *rest.Config) (*CountV1Client, error) {
 	return NewForConfigAndClient(&config, httpClient)
 }
 
-// NewForConfigAndClient creates a new CountV1Client for the given config and http client.
+// NewForConfigAndClient creates a new Mark8sV1Client for the given config and http client.
 // Note the http client provided takes precedence over the configured transport values.
-func NewForConfigAndClient(c *rest.Config, h *http.Client) (*CountV1Client, error) {
+func NewForConfigAndClient(c *rest.Config, h *http.Client) (*Mark8sV1Client, error) {
 	config := *c
 	if err := setConfigDefaults(&config); err != nil {
 		return nil, err
@@ -66,12 +66,12 @@ func NewForConfigAndClient(c *rest.Config, h *http.Client) (*CountV1Client, erro
 	if err != nil {
 		return nil, err
 	}
-	return &CountV1Client{client}, nil
+	return &Mark8sV1Client{client}, nil
 }
 
-// NewForConfigOrDie creates a new CountV1Client for the given config and
+// NewForConfigOrDie creates a new Mark8sV1Client for the given config and
 // panics if there is an error in the config.
-func NewForConfigOrDie(c *rest.Config) *CountV1Client {
+func NewForConfigOrDie(c *rest.Config) *Mark8sV1Client {
 	client, err := NewForConfig(c)
 	if err != nil {
 		panic(err)
@@ -79,9 +79,9 @@ func NewForConfigOrDie(c *rest.Config) *CountV1Client {
 	return client
 }
 
-// New creates a new CountV1Client for the given RESTClient.
-func New(c rest.Interface) *CountV1Client {
-	return &CountV1Client{c}
+// New creates a new Mark8sV1Client for the given RESTClient.
+func New(c rest.Interface) *Mark8sV1Client {
+	return &Mark8sV1Client{c}
 }
 
 func setConfigDefaults(config *rest.Config) error {
@@ -99,7 +99,7 @@ func setConfigDefaults(config *rest.Config) error {
 
 // RESTClient returns a RESTClient that is used to communicate
 // with API server by this client implementation.
-func (c *CountV1Client) RESTClient() rest.Interface {
+func (c *Mark8sV1Client) RESTClient() rest.Interface {
 	if c == nil {
 		return nil
 	}
