@@ -154,9 +154,9 @@ func (c *Controller) syncHandler(key string) error {
 	// 从缓存中取对象
 	count, err := c.countLister.Counts(namespace).Get(name)
 	if err != nil {
-		// 如果Student对象被删除了，就会走到这里，所以应该在这里加入执行
+		// 如果Count对象被删除了，就会走到这里，所以应该在这里加入执行
 		if errors.IsNotFound(err) {
-			glog.Infof("Student对象被删除，请在这里执行实际的删除业务: %s/%s ...", namespace, name)
+			glog.Infof("Count对象被删除，请在这里执行实际的删除业务: %s/%s ...", namespace, name)
 			return nil
 		}
 
@@ -164,7 +164,7 @@ func (c *Controller) syncHandler(key string) error {
 		return err
 	}
 
-	glog.Infof("这里是student对象的期望状态: %#v ...", count)
+	glog.Infof("这里是Count对象的期望状态: %#v ...", count)
 	glog.Infof("实际状态是从业务层面得到的，此处应该去的实际状态，与期望状态做对比，并根据差异做出响应(新增或者删除)")
 
 	c.recorder.Event(count, coreV1.EventTypeNormal, SuccessSynced, MessageResourceSynced)
