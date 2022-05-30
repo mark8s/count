@@ -23,7 +23,7 @@ import (
 const (
 	controllerAgentName   = "count-controller"
 	SuccessSynced         = "Synced"
-	MessageResourceSynced = "Student synced successfully"
+	MessageResourceSynced = "Count synced successfully"
 )
 
 // Controller is the controller implementation for Student resources

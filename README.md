@@ -1,6 +1,13 @@
 # count
 k8s controller demo
 
+## controller
+controller的作用就是监听指定对象的新增、删除、修改等变化，针对这些变化做出相应的响应。
+
+![controller](./images/controller.png)
+
+如上图，API对象的变化会通过Informer存入队列（WorkQueue），在Controller中消费队列的数据做出响应，响应相关的具体代码就是我们要做的真正业务逻辑。
+
 ## 编写一个controller的步骤
 
 1. 创建crd.yaml ，也就是你要想好你的crd到底要干什么
@@ -10,6 +17,7 @@ k8s controller demo
 3. 编写controller逻辑
 
 ## How to use code-generator
+
 执行 hack/update-codegen.sh 
 
 `update-codegen.sh` 命令含义，
@@ -30,7 +38,7 @@ k8s controller demo
 
 `count/pkg/apis`: `${MODULE}/${APIS_PKG},${APIS_PKG}`和apis目录保持一致
 
-`count:v1`: `${GROUP_VERSION}`，GROUP==count,VERSION==v1
+`count:v1`: `${GROUP_VERSION}，GROUP==count,VERSION==v1`
 
 ## 编译
 ```shell
@@ -67,6 +75,83 @@ I0530 07:58:51.463008    4866 controller.go:134] Successfully synced 'default/te
 ^CI0530 07:58:53.802445    4866 controller.go:99] worker已经结束
 [root@biz-master-48 count]#
 ```
+
+## 补充
+
+### k8s日志处理机制
+当集群中的 node 或 pod 异常时，大部分用户会使用 kubectl 查看对应的 events，那么 events 是从何而来？ ...
+
+我们可以使用`EventRecorder`为我们创建的自定义资源，添加Event记录，方便排查问题。效果如：
+```shell
+[root@biz-master-48 crd]# kubectl describe count test-count 
+Name:         test-count
+Namespace:    default
+Labels:       <none>
+Annotations:  <none>
+API Version:  demo.mark8s.io/v1
+Kind:         Count
+Metadata:
+  Creation Timestamp:  2022-05-30T08:49:40Z
+  Generation:          1
+  Managed Fields:
+    API Version:  demo.mark8s.io/v1
+    Fields Type:  FieldsV1
+    fieldsV1:
+      f:metadata:
+        f:annotations:
+          .:
+          f:kubectl.kubernetes.io/last-applied-configuration:
+      f:spec:
+        .:
+        f:count:
+        f:name:
+    Manager:         kubectl-client-side-apply
+    Operation:       Update
+    Time:            2022-05-30T08:49:40Z
+  Resource Version:  11989649
+  UID:               6e9e998c-e288-443e-ab5f-b70f156f598c
+Spec:
+  Count:  3
+  Name:   nginx
+Events:
+  Type    Reason  Age   From              Message
+  ----    ------  ----  ----              -------
+  Normal  Synced  39s   count-controller  Count synced successfully
+```
+
+那么如何使用`EventRecorder`呢？ 先看下图
+
+![eventRecorder](./images/eventRecorder.png)
+
+代码逻辑：
+```shell
+    eventBroadcaster := record.NewBroadcaster()
+	eventBroadcaster.StartLogging(glog.Infof)
+	eventBroadcaster.StartRecordingToSink(&typeCoreV1.EventSinkImpl{
+		Interface: kubeClientSet.CoreV1().Events(""),
+	})
+
+	recorder := eventBroadcaster.NewRecorder(scheme.Scheme, coreV1.EventSource{Component: "count-controller"})
+    recorder.Event(count, coreV1.EventTypeNormal, "Synced", "Count synced successfully")
+```
+`eventBroadcaster`是一个事件广播器，通过它提供了StartLogging和StartRecordingToSink两个事件处理函数，分别将event发送给log和apiserver。
+
+NewRecorder创建了recorder实例，它提供了Event方法供事件记录。
+
+
+### glog
+```go
+glog.V(4).Info("Creating event broadcaster")
+```
+glog 可以指定日志的级别，如执行的时候指定 -v=4,此时，日志级别小于或等于 4 的日志将被打印出来
+
+完整的命令如：
+```shell
+$ ./count -alsologtostderr -v=4
+```
+
+### 
+
 
 ## 问题
 1.使用vendor
